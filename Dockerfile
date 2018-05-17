@@ -7,4 +7,4 @@ RUN cd /go/src/kubster && CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cg
 # Build image stage
 FROM scratch
 COPY --from=build-env /go/src/kubster/kubster /
-ENTRYPOINT /kubster
+ENTRYPOINT ["/kubster"]
