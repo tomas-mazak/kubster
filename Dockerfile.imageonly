@@ -1,0 +1,4 @@
+# Build image stage
+FROM scratch
+COPY build/kubster /
+ENTRYPOINT ["/kubster"]
