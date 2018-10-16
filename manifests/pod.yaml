@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: kubster
+  name: kubster-pod
+spec:
+  containers:
+  - name: kubster
+    image: wigwam/kubster
+    ports:
+    - containerPort: 8080
+    env:
+    - name: KUBSTER_BIND
+      value: ":8080"
+    - name: KUBSTER_READYDELAY
+      value: "30"
+    livenessProbe:
+      httpGet:
+        path: /live
+        port: 8080
+      initialDelaySeconds: 1
+      periodSeconds: 2
+    readinessProbe:
+      httpGet:
+        path: /ready
+        port: 8080
+      initialDelaySeconds: 1
+      periodSeconds: 2
