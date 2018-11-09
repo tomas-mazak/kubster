@@ -1,18 +1,19 @@
 package main
 
 import (
-	"net/http"
 	"fmt"
 	"log"
-	"strconv"
-	"github.com/spf13/viper"
-	"github.com/gorilla/handlers"
+	"net/http"
 	"os"
+	"strconv"
 	"time"
+
+	"github.com/gorilla/handlers"
+	"github.com/spf13/viper"
 )
 
 var Config struct {
-	Bind string
+	Bind       string
 	ReadyDelay int
 }
 
@@ -40,14 +41,14 @@ func main() {
 	log.Fatal(http.ListenAndServe(Config.Bind, handlers.CombinedLoggingHandler(os.Stdout, mux)))
 }
 
-func getReady(delay int)  {
+func getReady(delay int) {
 	time.Sleep(time.Duration(delay) * time.Second)
 	log.Println("Got ready!")
 	ready = true
 }
 
 func handleRoot(response http.ResponseWriter, request *http.Request) {
-	fmt.Fprintln(response, kubeLogo)
+	fmt.Fprintln(response, dockerLogo)
 }
 
 func handleLivenessProbe(response http.ResponseWriter, request *http.Request) {
@@ -72,7 +73,7 @@ func handleSet(response http.ResponseWriter, request *http.Request) {
 		http.Error(response, fmt.Sprintf("Can't parse liveness status: %v\n", err), http.StatusBadRequest)
 	}
 
-    err = setFlag(&ready, request.URL.Query().Get("ready"))
+	err = setFlag(&ready, request.URL.Query().Get("ready"))
 	if err != nil {
 		http.Error(response, fmt.Sprintf("Can't parse readiness status: %v\n", err), http.StatusBadRequest)
 	}
@@ -88,6 +89,20 @@ func setFlag(flag *bool, valStr string) error {
 	}
 	return err
 }
+
+var dockerLogo = `                    ##        .            
+              ## ## ##       ==            
+           ## ## ## ##      ===            
+       /""""""""""""""""\___/ ===        
+  ~~~ {~~ ~~~~ ~~~ ~~~~ ~~ ~ /  ===- ~~~   
+       \______ o          __/            
+         \    \        __/             
+          \____\______/                
+ 
+          |          |
+       __ |  __   __ | _  __   _
+      /  \| /  \ /   |/  / _\ | 
+      \__/| \__/ \__ |\_ \__  |`
 
 var kubeLogo = `                                ///////                                
                             //// @@@@@&////                            
