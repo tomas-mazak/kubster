@@ -1,0 +1,20 @@
+version: 0.2
+
+env:
+  variables:
+    CGO_ENABLED: "0"
+    GOOS: "linux"
+
+phases:
+  install:
+    runtime-versions:
+      golang: 1.14
+
+  build:
+    commands:
+      - go get -v -d .
+      - go build -a -installsuffix cgo -o kubster .
+
+artifacts:
+  files:
+    - kubster
