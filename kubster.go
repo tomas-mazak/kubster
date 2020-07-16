@@ -48,7 +48,7 @@ func getReady(delay int) {
 }
 
 func handleRoot(response http.ResponseWriter, request *http.Request) {
-	fmt.Fprintln(response, dockerLogo)
+	fmt.Fprintln(response, kubeLogo)
 }
 
 func handleLivenessProbe(response http.ResponseWriter, request *http.Request) {
