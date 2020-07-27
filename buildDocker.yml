@@ -16,7 +16,7 @@ phases:
       - echo Build started on `date`
       - echo "Source directory:" && ls -lia
       - echo "Built artifact directory (${CODEBUILD_SRC_DIR_BUILD}):" && ls -lia ${CODEBUILD_SRC_DIR_BUILD}
-      - ln -s ${CODEBUILD_SRC_DIR_BUILD} build
+      - cp -R ${CODEBUILD_SRC_DIR_BUILD} build
       - docker build -f Dockerfile.imageonly -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
