@@ -16,6 +16,7 @@ phases:
       - echo Build started on `date`
       - ls -lia
       - echo ${CODEBUILD_SRC_DIR_BUILD}
+      - ls -lia ${CODEBUILD_SRC_DIR_BUILD}
       - ln -s build ${CODEBUILD_SRC_DIR_BUILD}
       - unzip build/$BUILD_ARTIFACT -d build
       - docker build -f Dockerfile.imageonly -t $REPOSITORY_URI:latest .
