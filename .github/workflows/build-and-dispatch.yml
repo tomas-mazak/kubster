@@ -1,0 +1,54 @@
+name: build-and-dispatch
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - master
+
+env:
+  IMAGE_NAME: kubster
+  DISPATCH_TO: Flutter-Global/kubster-aws-app
+
+jobs:
+  build_and_dispatch:
+    runs-on: ubuntu-latest
+
+    outputs:
+      image_id: ${{ steps.push_image.outputs.image_id }}
+      image_version: ${{ steps.push_image.outputs.image_version }}
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      - name: Build container image
+        run: |
+          docker build -t $IMAGE_NAME .
+
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+      - name: Push container image to registry
+        id: push_image
+        run: |
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          VERSION=$(git describe --tags --match 'v*')
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker tag $IMAGE_NAME $IMAGE_ID:latest
+          docker push $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:latest
+          echo "::set-output name=image_id::$IMAGE_ID"
+          echo "::set-output name=image_version::$VERSION"
+
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.PAT }}
+          repository: $DISPATCH_TO
+          event-type: gatekeeper-publish
+          client-payload: '{"docker_image": {"image_id": "${{ steps.push_image.outputs.image_id }}", "image_version": "${{ steps.push_image.outputs.image_version }}"}, "github": ${{ toJson(github) }}}'
+
