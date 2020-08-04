@@ -50,7 +50,7 @@ jobs:
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.PAT }}
-          repository: $DISPATCH_TO
+          repository: Flutter-Global/kubster-aws-app
           event-type: gatekeeper-publish
           client-payload: '{"docker_image": {"image_id": "${{ steps.push_image.outputs.image_id }}", "image_version": "${{ steps.push_image.outputs.image_version }}"}, "github": ${{ toJson(github) }}}'
 
