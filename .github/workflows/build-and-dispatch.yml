@@ -52,5 +52,5 @@ jobs:
           token: ${{ secrets.PAT }}
           repository: Flutter-Global/kubster-aws-app
           event-type: dependency-autoupdate
-          client-payload: '{"docker_image": {"image_id": "${{ steps.push_image.outputs.image_id }}", "image_version": "${{ steps.push_image.outputs.image_version }}"}, "github": ${{ toJson(github) }}}'
+          client-payload: '{"dependency": {"type": "container_image", "image_id": "${{ steps.push_image.outputs.image_id }}", "image_version": "${{ steps.push_image.outputs.image_version }}"}, "github": ${{ toJson(github) }}}'
 
