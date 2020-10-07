@@ -47,7 +47,7 @@ jobs:
           echo "::set-output name=image_version::$VERSION"
 
       # TODO: find more sane way to notify multiple repos
-      - name: Repository Dispatch
+      - name: Notify kubster-aws-app
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.PAT }}
@@ -55,7 +55,7 @@ jobs:
           event-type: dependency-autoupdate
           client-payload: '{"dependency": {"type": "container_image", "image_id": "${{ steps.push_image.outputs.image_id }}", "image_version": "${{ steps.push_image.outputs.image_version }}"}, "github": ${{ toJson(github) }}}'
 
-      - name: Repository Dispatch
+      - name: Notify awsrefcdk-configrepo-aws-ppb
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.PAT }}
