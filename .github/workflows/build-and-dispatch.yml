@@ -46,6 +46,7 @@ jobs:
           echo "::set-output name=image_id::$IMAGE_ID"
           echo "::set-output name=image_version::$VERSION"
 
+      # TODO: find more sane way to notify multiple repos
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v1
         with:
@@ -54,3 +55,10 @@ jobs:
           event-type: dependency-autoupdate
           client-payload: '{"dependency": {"type": "container_image", "image_id": "${{ steps.push_image.outputs.image_id }}", "image_version": "${{ steps.push_image.outputs.image_version }}"}, "github": ${{ toJson(github) }}}'
 
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.PAT }}
+          repository: Flutter-Global/awsrefcdk-configrepo-aws-ppb
+          event-type: dependency-autoupdate
+          client-payload: '{"dependency": {"type": "container_image", "image_id": "${{ steps.push_image.outputs.image_id }}", "image_version": "${{ steps.push_image.outputs.image_version }}"}, "github": ${{ toJson(github) }}}'
