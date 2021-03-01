@@ -12,8 +12,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-//const Logo = kubeLogo
-const Logo = dockerLogo
+const Logo = kubeLogo
+//const Logo = dockerLogo
 
 var Config struct {
 	Bind       string
